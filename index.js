@@ -23,6 +23,7 @@ async function run() {
     const productCollection = database.collection("allProducts");
     const ordersCollection = database.collection("bookings");
     const usersCollection = database.collection("users");
+    const reviewsCollection = database.collection("reviews");
 
     // GET API
     app.get("/allProducts", async (req, res) => {
@@ -35,6 +36,13 @@ async function run() {
     app.post("/addProducts", async (req, res) => {
       const service = req.body;
       const result = await productCollection.insertOne(service);
+      res.json(result);
+    });
+
+    //POST REVIEW API
+    app.post("/addReview", async (req, res) => {
+      const service = req.body;
+      const result = await reviewsCollection.insertOne(service);
       res.json(result);
     });
 
@@ -54,6 +62,18 @@ async function run() {
         isAdmin = true;
       }
       res.json({ admin: isAdmin });
+    });
+
+    //Add user as Admin
+    app.put("/addAdmin", async (req, res) => {
+      const email = req.body.email;
+      const result = await usersCollection.updateOne(
+        { email },
+        {
+          $set: { role: "admin" },
+        }
+      );
+      res.json(result);
     });
 
     // SINGLE PRODUCT
