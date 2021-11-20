@@ -39,10 +39,17 @@ async function run() {
       res.json(result);
     });
 
+    // GET REVIEWS API
+    app.get("/allReviews", async (req, res) => {
+      const cursor = reviewsCollection.find({});
+      const reviews = await cursor.toArray();
+      res.send(reviews);
+    });
+
     //POST REVIEW API
     app.post("/addReview", async (req, res) => {
-      const service = req.body;
-      const result = await reviewsCollection.insertOne(service);
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
       res.json(result);
     });
 
