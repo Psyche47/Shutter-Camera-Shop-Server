@@ -22,18 +22,25 @@ async function run() {
     const database = client.db("shutter");
     const productCollection = database.collection("allProducts");
     const ordersCollection = database.collection("bookings");
+    const usersCollection = database.collection("users");
 
     // GET API
     app.get("/allProducts", async (req, res) => {
       const cursor = productCollection.find({});
-      const services = await cursor.toArray();
-      res.send(services);
+      const products = await cursor.toArray();
+      res.send(products);
     });
 
     // POST API
     app.post("/addProducts", async (req, res) => {
       const service = req.body;
       const result = await productCollection.insertOne(service);
+      res.json(result);
+    });
+
+    // ADD A USER
+    app.post("/users", async (req, res) => {
+      const result = await usersCollection.insertOne(req.body);
       res.json(result);
     });
 
